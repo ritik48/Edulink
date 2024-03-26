@@ -12,7 +12,7 @@
         "default_icon": "icon.png"
     },
     "permissions": ["tabs", "webRequest", "storage"],
-    "host_permissions": ["*://*.coursera.org/*"],
+    "host_permissions": ["*://*.coursera.org/learn/*"],
     "background": {
         "service_worker": "background.js"
     }

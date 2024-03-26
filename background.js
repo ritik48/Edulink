@@ -1,6 +1,8 @@
 let capturedUrls = [];
 let base_url;
 
+let tabChangeMessage = {};
+
 function fetchRequest(result) {
     const { url } = result;
 
@@ -18,6 +20,29 @@ function fetchRequest(result) {
     }
 }
 
+function checkAndSendMessage(url) {
+    const allowedUrls = [
+        "https://www.coursera.com/learn",
+        "https://www.coursera.org/learn",
+    ];
+
+    if (allowedUrls.some((allowedUrl) => url.startsWith(allowedUrl))) {
+        tabChangeMessage = {
+            url: url,
+            allowed: true,
+            action: "website_status",
+        };
+        chrome.runtime.sendMessage(tabChangeMessage);
+    } else {
+        tabChangeMessage = {
+            url: url,
+            allowed: false,
+            action: "website_status",
+        };
+        chrome.runtime.sendMessage(tabChangeMessage);
+    }
+}
+
 chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
     if (message.action === "start") {
         chrome.tabs.query(
@@ -25,7 +50,6 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
 
             function (tabs) {
                 if (tabs && tabs.length > 0) {
-                    console.log(tabs);
                     const activeTab = tabs[0];
                     const url = activeTab?.url;
 
@@ -43,11 +67,21 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
                 }
             }
         );
+
         console.log("=============== LISTENER ADDED ===================");
         chrome.webRequest.onBeforeRequest.addListener(
             fetchRequest,
             { urls: ["<all_urls>"] },
             ["requestBody"]
         );
+    }
+
+    // when the user clicks on the extension the popup script send background script a message with flag = "get tab status" ,
+    // to fetch the current tab url
+    if (message.action === "get_tab_status") {
+        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+            const url = tabs[0].url; // Get the URL of the active tab
+            checkAndSendMessage(url); // Call function to check and send message
+        });
     }
 });
