@@ -1,0 +1,19 @@
+{
+    "manifest_version": 3,
+    "name": "Edulink",
+    "version": "1.0",
+    "description": "Generate your shareable assignment submission link",
+    "icons": {
+        "128": "icon.png",
+        "48": "icon.png"
+    },
+    "action": {
+        "default_popup": "popup.html",
+        "default_icon": "icon.png"
+    },
+    "permissions": ["tabs", "webRequest", "storage"],
+    "host_permissions": ["*://*.coursera.org/*"],
+    "background": {
+        "service_worker": "background.js"
+    }
+}

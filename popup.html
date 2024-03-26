@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Extension test</title>
+        <style>
+            body {
+                display: flex;
+                align-items: center;
+                background-color: #181616;
+                min-height: 150px;
+            }
+            p {
+                color: rgba(68, 247, 116, 0.879);
+                border-radius: 8px;
+                
+            }
+            .container {
+                width: 250px;
+            }
+            .status {
+                background-color: aliceblue;
+                display: none;
+                font-weight: bold;
+                color: rgb(12, 142, 12);
+                border: 1px solid black;
+                text-transform: uppercase;
+                width: fit-content;
+                cursor: pointer;
+                padding: 0.2rem 0.3rem;
+                border-radius: 4px;
+                transition: 0.25s ease-in-out;
+            }
+            .status.active:hover {
+                background-color: rgb(40, 39, 39);
+                color: rgb(52, 255, 191);
+            }
+            .get-link {
+                font-weight: bold;
+                color: rgb(12, 142, 12);
+                background-color: aliceblue;
+                border: 1px solid rgb(53, 53, 53);
+                border-radius: 4px;
+                text-transform: uppercase;
+                cursor: pointer;
+                padding: 0.2rem 0.3rem;
+                transition: 0.15s ease-in-out;
+            }
+            .get-link:hover {
+                background-color: rgb(40, 39, 39);
+                color: rgb(52, 255, 191);
+            }
+            .link {
+                display: none;
+                border: 2px solid rgb(53, 53, 53);
+                padding: 0.3rem 0.5rem;
+            }
+            .btn {
+                display: flex;
+                gap: 10px;
+                align-items: center;
+                justify-content: center;
+                
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <p class="link"></p>
+            <div class="btn">
+                <button class="get-link">Get Link</button>
+                <!-- <button id="refresh-button">Refresh</button> -->
+                <p class="status"></p>
+            </div>
+        </div>
+        <script src="popup.js"></script>
+    </body>
+</html>
