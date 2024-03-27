@@ -3,16 +3,35 @@ let base_url;
 
 let tabChangeMessage = {};
 
+function getCode(url, code) {
+    const regex = new RegExp(`${code}~[^/?&!@#$%^*()+={}[\\]\\\|;:'",<>.]*`);
+
+    const match = url.match(regex);
+
+    if (match) {
+        const extractedString = match[0];
+        return extractedString;
+    } else {
+        return false;
+    }
+}
+
+function getPeerCode(url) {
+    const regex = /\/peer\/([a-zA-Z0-9]+)/;
+    const match = url.match(regex);
+
+    if (!match) return false;
+    return match[1];
+}
+
 function fetchRequest(result) {
     const { url } = result;
 
-    if (
-        url.includes("q=submission&userId=") &&
-        url.includes("&peerSubmissionId=")
-    ) {
-        const urlParts = url.split("~");
-        const requiredPart = urlParts[2].split("&")[0];
+    const peerCode = getPeerCode(base_url);
+    let code = getCode(url, peerCode);
 
+    if (code && peerCode) {
+        let requiredPart = code.split("~")[1];
         chrome.runtime.sendMessage({
             action: "found",
             data: base_url + requiredPart,
@@ -53,8 +72,8 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
                     const activeTab = tabs[0];
                     const url = activeTab?.url;
 
-                    if (url.includes("/submit")) {
-                        base_url = url.replace("/submit", "/review/");
+                    if (url.match(/\/submit$/)) {
+                        base_url = url.replace(/\/submit$/, "/review/");
                         chrome.tabs.reload(activeTab.id);
                     } else {
                         base_url = url + "/review/";
